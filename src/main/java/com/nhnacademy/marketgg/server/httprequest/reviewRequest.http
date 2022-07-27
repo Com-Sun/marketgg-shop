@@ -1,0 +1,8 @@
+POST http://localhost:7080/products/1/review/admin
+Content-Type: application/json
+
+{
+  "assetNo": 2,
+  "content": "test",
+  "rating": 5
+}

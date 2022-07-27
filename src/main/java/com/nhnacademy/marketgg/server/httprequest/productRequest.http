@@ -1,0 +1,32 @@
+GET http://localhost:7080/shop/v1/admin/products
+Content-Type: application/json
+
+###
+
+GET http://localhost:7080/admin/v1/products/search/ds
+Content-Type: application/json
+
+###
+
+GET http://localhost:7080/admin/v1/products/search/이
+Content-Type: application/json
+
+###
+
+GET http://localhost:7080/shop/v1/admin/products/5
+Content-Type: application/json
+
+###
+
+GET http://localhost:7080/shop/v1/products/categories/101
+Content-Type: application/json
+
+###
+
+DELETE http://localhost:7080/shop/v1/admin/products/5
+Content-Type: application/json
+
+###
+
+POST http://localhost:7080/shop/v1/admin/products/5/restore
+Content-Type: application/json
