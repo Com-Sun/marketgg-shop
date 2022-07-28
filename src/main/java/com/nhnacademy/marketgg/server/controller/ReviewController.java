@@ -1,15 +1,20 @@
 package com.nhnacademy.marketgg.server.controller;
 
+import com.nhnacademy.marketgg.server.dto.request.DefaultPageRequest;
 import com.nhnacademy.marketgg.server.dto.request.ReviewCreateRequest;
+import com.nhnacademy.marketgg.server.dto.response.common.CommonResponse;
+import com.nhnacademy.marketgg.server.dto.response.common.SingleResponse;
 import com.nhnacademy.marketgg.server.service.ReviewService;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,14 +50,30 @@ public class ReviewController {
                                              BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            throw new IllegalArgumentException(bindingResult.getAllErrors().get(0).getDefaultMessage());
+            throw new IllegalArgumentException(bindingResult.getAllErrors()
+                                                            .get(0)
+                                                            .getDefaultMessage());
         }
 
-        this.reviewService.createReview(reviewRequest, uuid);
+        this.reviewService.createReview(reviewRequest,
+                                        uuid);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                              .location(URI.create("/products/" + productId + "/review/" + uuid))
                              .contentType(MediaType.APPLICATION_JSON)
                              .build();
     }
+
+    @GetMapping("/{productId}/review")
+    public ResponseEntity<? extends CommonResponse> retrieveReviews(@PathVariable final Long productId,
+                                                                    final DefaultPageRequest pageRequest) {
+
+        SingleResponse<Page> response = this.reviewService.retrieveReviews(pageRequest.getPageable());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                             .location(URI.create("/products/" + productId + "/review"))
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(response);
+    }
+
 }

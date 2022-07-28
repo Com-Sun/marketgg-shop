@@ -1,6 +1,7 @@
 package com.nhnacademy.marketgg.server.service.impl;
 
 import com.nhnacademy.marketgg.server.dto.request.ReviewCreateRequest;
+import com.nhnacademy.marketgg.server.dto.response.ReviewResponse;
 import com.nhnacademy.marketgg.server.dto.response.common.SingleResponse;
 import com.nhnacademy.marketgg.server.entity.Asset;
 import com.nhnacademy.marketgg.server.entity.Member;
@@ -36,6 +37,9 @@ public class DefaultReviewService implements ReviewService {
 
     @Override
     public SingleResponse<Page> retrieveReviews(Pageable pageable) {
-        return null;
+        Page<ReviewResponse> response = reviewRepository.retrieveReviews(pageable);
+        SingleResponse<Page> reviews = new SingleResponse<>(response);
+
+        return reviews;
     }
 }
