@@ -2,6 +2,7 @@ package com.nhnacademy.marketgg.server.controller;
 
 import com.nhnacademy.marketgg.server.dto.request.DefaultPageRequest;
 import com.nhnacademy.marketgg.server.dto.request.ReviewCreateRequest;
+import com.nhnacademy.marketgg.server.dto.request.ReviewUpdateRequest;
 import com.nhnacademy.marketgg.server.dto.response.common.CommonResponse;
 import com.nhnacademy.marketgg.server.dto.response.common.SingleResponse;
 import com.nhnacademy.marketgg.server.service.ReviewService;
@@ -16,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -94,6 +96,23 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK)
                              .location(URI.create(DEFAULT_REVIEW_URI + productId + "/review/" + reviewId))
                              .contentType(MediaType.APPLICATION_JSON).body(response);
+    }
+
+    @PutMapping("/{productId}/review/{reviewId}")
+    public ResponseEntity<Void> updateReview(@PathVariable final Long productId,
+                                             @PathVariable final Long reviewId,
+                                             @RequestBody @Valid final ReviewUpdateRequest reviewRequest,
+                                             BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            throw new IllegalArgumentException(bindingResult.getAllErrors().get(0).getDefaultMessage());
+        }
+
+        this.reviewService.updateReview(reviewRequest, reviewId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                             .location(URI.create(DEFAULT_REVIEW_URI + productId + "/review/" + reviewId))
+                             .contentType(MediaType.APPLICATION_JSON).build();
     }
 
 }

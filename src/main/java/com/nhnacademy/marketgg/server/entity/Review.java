@@ -1,6 +1,7 @@
 package com.nhnacademy.marketgg.server.entity;
 
 import com.nhnacademy.marketgg.server.dto.request.ReviewCreateRequest;
+import com.nhnacademy.marketgg.server.dto.request.ReviewUpdateRequest;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -59,6 +60,12 @@ public class Review {
         this.isBest = false;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void updateReview(ReviewUpdateRequest reviewRequest, Asset asset) {
+        this.content = reviewRequest.getContent();
+        this.rating = reviewRequest.getRating();
+        this.asset = asset;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.nhnacademy.marketgg.server.service;
 
 import com.nhnacademy.marketgg.server.dto.request.ReviewCreateRequest;
+import com.nhnacademy.marketgg.server.dto.request.ReviewUpdateRequest;
 import com.nhnacademy.marketgg.server.dto.response.ReviewResponse;
 import com.nhnacademy.marketgg.server.dto.response.common.SingleResponse;
 import org.springframework.data.domain.Page;
@@ -36,5 +37,8 @@ public interface ReviewService {
      * @return - ReviewResponse가 담긴 공통 응답객체를 반환합니다.
      */
     SingleResponse<ReviewResponse> retrieveReviewDetails(final Long id);
+
+
+    void updateReview(final ReviewUpdateRequest reviewRequest, final Long id);
 
 }
