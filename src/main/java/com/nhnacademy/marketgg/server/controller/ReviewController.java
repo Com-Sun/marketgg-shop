@@ -82,4 +82,16 @@ public class ReviewController {
                              .body(response);
     }
 
+    @GetMapping("/{productId}/review/{reviewId}")
+    public ResponseEntity<CommonResponse> retrieveReviewDetails(@PathVariable final Long productId,
+                                                                @PathVariable final Long reviewId) {
+
+        SingleResponse<?> response = this.reviewService.retrieveReviewDetails(reviewId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                             .location(URI.create("/products/" + productId + "/review/" + reviewId))
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(response);
+    }
+
 }

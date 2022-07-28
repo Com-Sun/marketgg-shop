@@ -37,9 +37,16 @@ public class DefaultReviewService implements ReviewService {
 
     @Override
     public SingleResponse<Page> retrieveReviews(final Pageable pageable) {
-        Page<ReviewResponse> response = this. reviewRepository.retrieveReviews(pageable);
-        SingleResponse<Page> reviews = new SingleResponse<>(response);
+        Page<ReviewResponse> response = this.reviewRepository.retrieveReviews(pageable);
 
-        return reviews;
+        return new SingleResponse<>(response);
+    }
+
+
+    @Override
+    public SingleResponse<ReviewResponse> retrieveReviewDetails(final Long id) {
+        ReviewResponse response = this.reviewRepository.queryById(id);
+
+        return new SingleResponse<>(response);
     }
 }
