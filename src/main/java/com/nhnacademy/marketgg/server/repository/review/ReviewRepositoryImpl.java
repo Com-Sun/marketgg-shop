@@ -35,6 +35,8 @@ public class ReviewRepositoryImpl extends QuerydslRepositorySupport implements R
                         .limit(pageable.getPageSize())
                         .fetchResults();
 
-        return new PageImpl<>(results.getResults(), pageable, results.getTotal());
+        return new PageImpl<>(results.getResults(),
+                              pageable,
+                              results.getTotal());
     }
 }

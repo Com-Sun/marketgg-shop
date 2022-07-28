@@ -9,7 +9,6 @@ import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -64,11 +63,18 @@ public class ReviewController {
                              .build();
     }
 
+    /**
+     * 모든 리뷰를 조회합니다.
+     *
+     * @param productId   - 리뷰가 달린 상품의 기본키입니다.
+     * @param pageRequest - 기본 번호 0, 사이즈 10인 페이지 요청입니다.
+     * @return - 페이지 정보가 담긴 공통 응답 객체를 반환합니다.
+     */
     @GetMapping("/{productId}/review")
-    public ResponseEntity<? extends CommonResponse> retrieveReviews(@PathVariable final Long productId,
-                                                                    final DefaultPageRequest pageRequest) {
+    public ResponseEntity<CommonResponse> retrieveReviews(@PathVariable final Long productId,
+                                                          final DefaultPageRequest pageRequest) {
 
-        SingleResponse<Page> response = this.reviewService.retrieveReviews(pageRequest.getPageable());
+        SingleResponse<?> response = this.reviewService.retrieveReviews(pageRequest.getPageable());
 
         return ResponseEntity.status(HttpStatus.OK)
                              .location(URI.create("/products/" + productId + "/review"))
