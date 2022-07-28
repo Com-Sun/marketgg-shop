@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -118,6 +119,23 @@ public class ReviewController {
         }
 
         this.reviewService.updateReview(reviewRequest, reviewId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                             .location(URI.create(DEFAULT_REVIEW_URI + productId + "/review/" + reviewId))
+                             .contentType(MediaType.APPLICATION_JSON).build();
+    }
+
+    /**
+     * 후기를 삭제합니다.
+     *
+     * @param productId - 후기가 달린 상품의 기본키입니다.
+     * @param reviewId  - 후기의 식별번호 입니다.
+     * @return - Void 타입 응답객체를 반환합니다.
+     */
+    @DeleteMapping("/{productId}/review/{reviewId}")
+    public ResponseEntity<Void> deleteReview(@PathVariable final Long productId,
+                                             @PathVariable final Long reviewId) {
+        this.reviewService.deleteReview(reviewId);
 
         return ResponseEntity.status(HttpStatus.OK)
                              .location(URI.create(DEFAULT_REVIEW_URI + productId + "/review/" + reviewId))

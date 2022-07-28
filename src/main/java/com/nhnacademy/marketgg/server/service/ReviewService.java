@@ -42,8 +42,15 @@ public interface ReviewService {
      * 후기를 수정합니다.
      *
      * @param reviewRequest - 후기 수정 정보를 담은 DTO입니다.
-     * @param id - 후기의 식별번호입니다.
+     * @param id            - 후기의 식별번호입니다.
      */
     void updateReview(final ReviewUpdateRequest reviewRequest, final Long id);
+
+    /**
+     * 후기를 삭제합니다.
+     *
+     * @param id - 삭제하려는 후기의 기본키입니다.
+     */
+    void deleteReview(final Long id);
 
 }

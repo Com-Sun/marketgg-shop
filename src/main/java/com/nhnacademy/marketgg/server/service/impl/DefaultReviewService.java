@@ -63,4 +63,10 @@ public class DefaultReviewService implements ReviewService {
         this.reviewRepository.save(review);
 
     }
+
+    @Override
+    public void deleteReview(final Long id) {
+        this.reviewRepository.delete(reviewRepository.findById(id).orElseThrow(ReviewNotFoundException::new));
+    }
+
 }
