@@ -12,7 +12,7 @@ public class ReviewUpdateRequest {
 
     private Long reviewId;
 
-    private Long assetNo;
+    private Long assetId;
 
     @Size(max = 300, message = "후기 내용은 300자를 넘을 수 없습니다.")
     private String content;

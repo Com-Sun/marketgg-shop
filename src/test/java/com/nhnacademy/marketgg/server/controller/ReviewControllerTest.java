@@ -7,17 +7,20 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.marketgg.server.dto.request.DefaultPageRequest;
 import com.nhnacademy.marketgg.server.dto.request.ReviewCreateRequest;
+import com.nhnacademy.marketgg.server.dto.request.ReviewUpdateRequest;
 import com.nhnacademy.marketgg.server.dto.response.common.SingleResponse;
 import com.nhnacademy.marketgg.server.service.ReviewService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -38,10 +41,12 @@ class ReviewControllerTest {
     ReviewService reviewService;
 
     private ReviewCreateRequest reviewRequest;
+    private ReviewUpdateRequest reviewUpdateRequest;
 
     @BeforeEach
     void setUp() {
         reviewRequest = new ReviewCreateRequest();
+        reviewUpdateRequest = new ReviewUpdateRequest();
     }
 
     @Test
@@ -79,5 +84,20 @@ class ReviewControllerTest {
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         then(reviewService).should().retrieveReviewDetails(anyLong());
+    }
+
+    @Test
+    @DisplayName("후기 수정 테스트")
+    void testUpdateReview() throws Exception {
+        String content = objectMapper.writeValueAsString(reviewUpdateRequest);
+        BDDMockito.willDoNothing().given(reviewService)
+                  .updateReview(any(ReviewUpdateRequest.class), anyLong());
+
+        this.mockMvc.perform(put("/products/{productId}/review/{reviewId}", 1L, 1L)
+                                 .contentType(MediaType.APPLICATION_JSON)
+                                 .content(content))
+                    .andExpect(status().isOk());
+
+        then(reviewService).should().updateReview(any(ReviewUpdateRequest.class), anyLong());
     }
 }

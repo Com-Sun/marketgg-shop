@@ -98,6 +98,15 @@ public class ReviewController {
                              .contentType(MediaType.APPLICATION_JSON).body(response);
     }
 
+    /**
+     * 후기를 수정합니다.
+     *
+     * @param productId     - 후기가 달린 상품의 기본키입니다.
+     * @param reviewId      - 후기의 식별번호입니다.
+     * @param reviewRequest - 후기 수정 정보가 담긴 DTO 입니다.
+     * @param bindingResult - validation을 체크합니다.
+     * @return - Void 타입 응답객체를 반환합니다.
+     */
     @PutMapping("/{productId}/review/{reviewId}")
     public ResponseEntity<Void> updateReview(@PathVariable final Long productId,
                                              @PathVariable final Long reviewId,

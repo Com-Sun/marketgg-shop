@@ -53,9 +53,9 @@ public class DefaultReviewService implements ReviewService {
     }
 
     @Override
-    public void updateReview(ReviewUpdateRequest reviewRequest, Long id) {
+    public void updateReview(final ReviewUpdateRequest reviewRequest, final Long id) {
         Review review = this.reviewRepository.findById(id).orElseThrow(ReviewNotFoundException::new);
-        Asset asset = this.assetRepository.findById(reviewRequest.getAssetNo())
+        Asset asset = this.assetRepository.findById(reviewRequest.getAssetId())
                                           .orElseThrow(AssetNotFoundException::new);
 
         review.updateReview(reviewRequest, asset);

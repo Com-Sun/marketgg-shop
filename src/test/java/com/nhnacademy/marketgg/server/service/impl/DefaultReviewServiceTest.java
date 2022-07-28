@@ -9,6 +9,7 @@ import static org.mockito.BDDMockito.then;
 
 import com.nhnacademy.marketgg.server.dto.request.MemberCreateRequest;
 import com.nhnacademy.marketgg.server.dto.request.ReviewCreateRequest;
+import com.nhnacademy.marketgg.server.dto.request.ReviewUpdateRequest;
 import com.nhnacademy.marketgg.server.dto.response.ReviewResponse;
 import com.nhnacademy.marketgg.server.dto.response.common.SingleResponse;
 import com.nhnacademy.marketgg.server.entity.Asset;
@@ -54,6 +55,7 @@ class DefaultReviewServiceTest {
     private Asset asset;
     private ReviewCreateRequest reviewRequest;
     private ReviewResponse reviewResponse;
+    private ReviewUpdateRequest reviewUpdateRequest;
 
     @BeforeEach
     void setUp() {
@@ -63,7 +65,7 @@ class DefaultReviewServiceTest {
         asset = Asset.create();
 
         reviewRequest = new ReviewCreateRequest();
-        ReflectionTestUtils.setField(reviewRequest, "assetNo", 1L);
+        ReflectionTestUtils.setField(reviewRequest, "assetId", 1L);
         ReflectionTestUtils.setField(reviewRequest, "content", "리뷰내용");
         ReflectionTestUtils.setField(reviewRequest, "rating", 5L);
         review = new Review(reviewRequest, member, asset);
@@ -77,6 +79,13 @@ class DefaultReviewServiceTest {
                                             LocalDateTime.now(),
                                             LocalDateTime.now(),
                                             null);
+
+        reviewUpdateRequest = new ReviewUpdateRequest();
+        ReflectionTestUtils.setField(reviewUpdateRequest, "reviewId", 1L);
+        ReflectionTestUtils.setField(reviewUpdateRequest, "assetId", 1L);
+        ReflectionTestUtils.setField(reviewUpdateRequest, "content", "리뷰 수정합니다~");
+        ReflectionTestUtils.setField(reviewUpdateRequest, "rating", 5L);
+
     }
 
     @Test
@@ -113,6 +122,18 @@ class DefaultReviewServiceTest {
 
         assertThat(response.getData().getContent()).isEqualTo("content");
         then(reviewRepository).should().queryById(anyLong());
+    }
+
+    @Test
+    @DisplayName("후기 수정 테스트")
+    void testUpdateReview() {
+        given(assetRepository.findById(anyLong())).willReturn(Optional.ofNullable(asset));
+        given(reviewRepository.findById(anyLong())).willReturn(Optional.of(review));
+
+        this.reviewService.updateReview(reviewUpdateRequest, 1L);
+
+        then(reviewRepository).should().findById(anyLong());
+        then(reviewRepository).should().save(any(Review.class));
     }
 
 }
