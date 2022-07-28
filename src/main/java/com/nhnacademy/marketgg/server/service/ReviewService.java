@@ -1,6 +1,9 @@
 package com.nhnacademy.marketgg.server.service;
 
 import com.nhnacademy.marketgg.server.dto.request.ReviewCreateRequest;
+import com.nhnacademy.marketgg.server.dto.response.common.SingleResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * 리뷰 서비스입니다.
@@ -16,5 +19,7 @@ public interface ReviewService {
      * @param uuid - 회원을 찾기 위한 uuid값입니다.
      */
     void createReview(final ReviewCreateRequest reviewRequest, final String uuid);
+
+    SingleResponse<Page> retrieveReviews(Pageable pageable);
 
 }
