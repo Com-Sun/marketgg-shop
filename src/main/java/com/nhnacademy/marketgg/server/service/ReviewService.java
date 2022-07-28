@@ -29,6 +29,12 @@ public interface ReviewService {
      */
     SingleResponse<Page> retrieveReviews(final Pageable pageable);
 
+    /**
+     * 후기의 상세 정보를 조회합니다.
+     *
+     * @param id - 후기의 기본 키 입니다.
+     * @return - ReviewResponse가 담긴 공통 응답객체를 반환합니다.
+     */
     SingleResponse<ReviewResponse> retrieveReviewDetails(final Long id);
 
 }

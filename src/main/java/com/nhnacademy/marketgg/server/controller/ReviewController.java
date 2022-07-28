@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private static final String DEFAULT_REVIEW_URI = "/products/";
 
     /**
      * 글로 작성된 리뷰를 생성합니다. 추후 사진 기능이 추가될 예정입니다.
@@ -49,18 +50,14 @@ public class ReviewController {
                                              BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            throw new IllegalArgumentException(bindingResult.getAllErrors()
-                                                            .get(0)
-                                                            .getDefaultMessage());
+            throw new IllegalArgumentException(bindingResult.getAllErrors().get(0).getDefaultMessage());
         }
 
-        this.reviewService.createReview(reviewRequest,
-                                        uuid);
+        this.reviewService.createReview(reviewRequest, uuid);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                             .location(URI.create("/products/" + productId + "/review/" + uuid))
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .build();
+                             .location(URI.create(DEFAULT_REVIEW_URI + productId + "/review/" + uuid))
+                             .contentType(MediaType.APPLICATION_JSON).build();
     }
 
     /**
@@ -77,11 +74,17 @@ public class ReviewController {
         SingleResponse<?> response = this.reviewService.retrieveReviews(pageRequest.getPageable());
 
         return ResponseEntity.status(HttpStatus.OK)
-                             .location(URI.create("/products/" + productId + "/review"))
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(response);
+                             .location(URI.create(DEFAULT_REVIEW_URI + productId + "/review"))
+                             .contentType(MediaType.APPLICATION_JSON).body(response);
     }
 
+    /**
+     * 후기의 상세정보를 조회합니다.
+     *
+     * @param productId - 후기가 달린 상품의 기본키입니다.
+     * @param reviewId  - 작성된 후기의 기본키입니다.
+     * @return - ReviewResponse가 담긴 공통 응답객체를 반환합니다.
+     */
     @GetMapping("/{productId}/review/{reviewId}")
     public ResponseEntity<CommonResponse> retrieveReviewDetails(@PathVariable final Long productId,
                                                                 @PathVariable final Long reviewId) {
@@ -89,9 +92,8 @@ public class ReviewController {
         SingleResponse<?> response = this.reviewService.retrieveReviewDetails(reviewId);
 
         return ResponseEntity.status(HttpStatus.OK)
-                             .location(URI.create("/products/" + productId + "/review/" + reviewId))
-                             .contentType(MediaType.APPLICATION_JSON)
-                             .body(response);
+                             .location(URI.create(DEFAULT_REVIEW_URI + productId + "/review/" + reviewId))
+                             .contentType(MediaType.APPLICATION_JSON).body(response);
     }
 
 }
