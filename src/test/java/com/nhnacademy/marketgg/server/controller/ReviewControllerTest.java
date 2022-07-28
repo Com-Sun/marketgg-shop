@@ -1,11 +1,13 @@
 package com.nhnacademy.marketgg.server.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,8 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -50,9 +50,9 @@ class ReviewControllerTest {
         String content = objectMapper.writeValueAsString(reviewRequest);
 
         this.mockMvc.perform(post("/products/{productId}/review/{memberUuid}", 1L, "admin")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content))
-            .andExpect(status().isCreated());
+                                 .contentType(MediaType.APPLICATION_JSON)
+                                 .content(content))
+                    .andExpect(status().isCreated());
 
         then(reviewService).should().createReview(any(ReviewCreateRequest.class), anyString());
     }
@@ -63,8 +63,21 @@ class ReviewControllerTest {
         given(reviewService.retrieveReviews(new DefaultPageRequest().getPageable())).willReturn(new SingleResponse<>());
 
         this.mockMvc.perform(get("/products/{productId}/review/", 1L))
-            .andExpect(status().isOk());
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
         then(reviewService).should().retrieveReviews(any(Pageable.class));
+    }
+
+    @Test
+    @DisplayName("후기 상세 조회 테스트")
+    void testRetrieveReviewDetails() throws Exception {
+        given(reviewService.retrieveReviewDetails(anyLong())).willReturn(new SingleResponse<>());
+
+        this.mockMvc.perform(get("/products/{productId}/review/{reviewId}", 1L, 1L))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+
+        then(reviewService).should().retrieveReviewDetails(anyLong());
     }
 }

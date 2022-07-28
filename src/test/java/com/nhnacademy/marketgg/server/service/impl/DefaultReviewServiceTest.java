@@ -104,4 +104,15 @@ class DefaultReviewServiceTest {
         then(reviewRepository).should().retrieveReviews(page.getPageable());
     }
 
+    @Test
+    @DisplayName("후기 상세 조회 테스트")
+    void testRetrieveReviewDetails() {
+        given(reviewRepository.queryById(anyLong())).willReturn(reviewResponse);
+
+        SingleResponse<ReviewResponse> response = reviewService.retrieveReviewDetails(1L);
+
+        assertThat(response.getData().getContent()).isEqualTo("content");
+        then(reviewRepository).should().queryById(anyLong());
+    }
+
 }
