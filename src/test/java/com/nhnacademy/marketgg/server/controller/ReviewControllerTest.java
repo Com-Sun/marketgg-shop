@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -99,5 +100,14 @@ class ReviewControllerTest {
                     .andExpect(status().isOk());
 
         then(reviewService).should().updateReview(any(ReviewUpdateRequest.class), anyLong());
+    }
+
+    @Test
+    @DisplayName("후기 삭제 테스트")
+    void testDeleteReview() throws Exception {
+        this.mockMvc.perform(delete("/products/{productId}/review/{reviewId}", 1L, 1L))
+                    .andExpect(status().isOk());
+
+        then(reviewService).should().deleteReview(anyLong());
     }
 }

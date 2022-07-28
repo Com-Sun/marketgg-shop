@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.willDoNothing;
 
 import com.nhnacademy.marketgg.server.dto.request.MemberCreateRequest;
 import com.nhnacademy.marketgg.server.dto.request.ReviewCreateRequest;
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -134,6 +136,16 @@ class DefaultReviewServiceTest {
 
         then(reviewRepository).should().findById(anyLong());
         then(reviewRepository).should().save(any(Review.class));
+    }
+
+    @Test
+    @DisplayName("후기 삭제 테스트")
+    void testDeleteReview() {
+        given(reviewRepository.findById(anyLong())).willReturn(Optional.ofNullable(review));
+
+        this.reviewService.deleteReview(1L);
+
+        then(reviewRepository).should().delete(any(Review.class));
     }
 
 }
