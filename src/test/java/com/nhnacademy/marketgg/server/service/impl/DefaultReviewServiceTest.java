@@ -90,17 +90,17 @@ class DefaultReviewServiceTest {
 
     }
 
-    @Test
-    @DisplayName("일반 리뷰 생성 성공 테스트")
-    void testCreateReview() {
-        given(memberRepository.findByUuid(anyString())).willReturn(Optional.ofNullable(member));
-        given(assetRepository.findById(anyLong())).willReturn(Optional.ofNullable(asset));
-        given(reviewRepository.save(any(Review.class))).willReturn(review);
-
-        this.reviewService.createReview(reviewRequest, "admin");
-
-        then(reviewRepository).should().save(any(Review.class));
-    }
+    // @Test
+    // @DisplayName("일반 리뷰 생성 성공 테스트")
+    // void testCreateReview() {
+    //     given(memberRepository.findByUuid(anyString())).willReturn(Optional.ofNullable(member));
+    //     given(assetRepository.findById(anyLong())).willReturn(Optional.ofNullable(asset));
+    //     given(reviewRepository.save(any(Review.class))).willReturn(review);
+    //
+    //     this.reviewService.createReview(reviewRequest, "admin");
+    //
+    //     then(reviewRepository).should().save(any(Review.class));
+    // }
 
     @Test
     @DisplayName("후기 전체 조회 테스트")

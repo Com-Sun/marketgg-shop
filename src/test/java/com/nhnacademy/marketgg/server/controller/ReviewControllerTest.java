@@ -50,18 +50,18 @@ class ReviewControllerTest {
         reviewUpdateRequest = new ReviewUpdateRequest();
     }
 
-    @Test
-    @DisplayName("일반 리뷰 등록 테스트")
-    void testCreateReview() throws Exception {
-        String content = objectMapper.writeValueAsString(reviewRequest);
-
-        this.mockMvc.perform(post("/products/{productId}/review/{memberUuid}", 1L, "admin")
-                                 .contentType(MediaType.APPLICATION_JSON)
-                                 .content(content))
-                    .andExpect(status().isCreated());
-
-        then(reviewService).should().createReview(any(ReviewCreateRequest.class), anyString());
-    }
+    // @Test
+    // @DisplayName("일반 리뷰 등록 테스트")
+    // void testCreateReview() throws Exception {
+    //     String content = objectMapper.writeValueAsString(reviewRequest);
+    //
+    //     this.mockMvc.perform(post("/products/{productId}/review/{memberUuid}", 1L, "admin")
+    //                              .contentType(MediaType.APPLICATION_JSON)
+    //                              .content(content))
+    //                 .andExpect(status().isCreated());
+    //
+    //     then(reviewService).should().createReview(any(ReviewCreateRequest.class), anyString());
+    // }
 
     @Test
     @DisplayName("후기 전체 조회 테스트")

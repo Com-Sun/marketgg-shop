@@ -56,7 +56,7 @@ public class ReviewController {
             throw new IllegalArgumentException(bindingResult.getAllErrors().get(0).getDefaultMessage());
         }
 
-        this.reviewService.createReview(reviewRequest, uuid);
+        // this.reviewService.createReview(reviewRequest, uuid);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                              .location(URI.create(DEFAULT_REVIEW_URI + productId + "/review/" + uuid))
