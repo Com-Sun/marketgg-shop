@@ -22,12 +22,15 @@ public class ImageFileHandler {
         List<Image> images = new ArrayList<>();
 
         if (!CollectionUtils.isEmpty(multipartFiles)) {
+            Integer sequence = 1;
             for (MultipartFile multipartFile : multipartFiles) {
                 File dest = new File(dir, Objects.requireNonNull(multipartFile.getOriginalFilename()));
                 multipartFile.transferTo(dest);
 
                 Image image = new Image(asset, String.valueOf(dest));
+                image.setImageSequence(sequence);
                 images.add(image);
+                sequence++;
             }
         }
 
