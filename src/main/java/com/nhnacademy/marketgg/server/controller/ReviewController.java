@@ -6,7 +6,9 @@ import com.nhnacademy.marketgg.server.dto.request.ReviewUpdateRequest;
 import com.nhnacademy.marketgg.server.dto.response.common.CommonResponse;
 import com.nhnacademy.marketgg.server.dto.response.common.SingleResponse;
 import com.nhnacademy.marketgg.server.service.ReviewService;
+import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +23,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 리뷰 관리를 위한 컨트롤러입니다.
@@ -46,17 +50,19 @@ public class ReviewController {
      * @param bindingResult - validation 적용을 위한 파라미터입니다.
      * @return Void를 담은 응답객체를 반환합니다.
      */
-    @PostMapping("/{productId}/review/{memberUuid}")
+    @PostMapping(value = "/{productId}/review/{memberUuid}", consumes = { MediaType.APPLICATION_JSON_VALUE,
+        MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<Void> createReview(@PathVariable final Long productId,
                                              @PathVariable(name = "memberUuid") final String uuid,
-                                             @RequestBody @Valid final ReviewCreateRequest reviewRequest,
-                                             BindingResult bindingResult) {
+                                             @RequestPart @Valid final ReviewCreateRequest reviewRequest,
+                                             BindingResult bindingResult,
+                                             @RequestPart List<MultipartFile> images) throws IOException {
 
         if (bindingResult.hasErrors()) {
             throw new IllegalArgumentException(bindingResult.getAllErrors().get(0).getDefaultMessage());
         }
 
-        // this.reviewService.createReview(reviewRequest, uuid);
+        this.reviewService.createReview(reviewRequest, images, uuid);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                              .location(URI.create(DEFAULT_REVIEW_URI + productId + "/review/" + uuid))
