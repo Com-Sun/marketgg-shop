@@ -26,6 +26,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * ReviewService의 구현체입니다.
+ *
+ * @version 1.0.0
+ */
 @Service
 @RequiredArgsConstructor
 public class DefaultReviewService implements ReviewService {
@@ -40,20 +45,20 @@ public class DefaultReviewService implements ReviewService {
     public void createReview(final ReviewCreateRequest reviewRequest, List<MultipartFile> images,
                              final String uuid) throws IOException {
 
-        Member member = this.memberRepository.findByUuid(uuid).orElseThrow(MemberNotFoundException::new);
+        Member member = memberRepository.findByUuid(uuid).orElseThrow(MemberNotFoundException::new);
 
-        Asset asset = this.assetRepository.save(Asset.create());
+        Asset asset = assetRepository.save(Asset.create());
 
         List<Image> parseImages = ImageFileHandler.parseImages(images, asset);
 
-        this.imageRepository.saveAll(parseImages);
+        imageRepository.saveAll(parseImages);
 
-        this.reviewRepository.save(new Review(reviewRequest, member, asset));
+        reviewRepository.save(new Review(reviewRequest, member, asset));
     }
 
     @Override
     public SingleResponse<Page> retrieveReviews(final Pageable pageable) {
-        Page<ReviewResponse> response = this.reviewRepository.retrieveReviews(pageable);
+        Page<ReviewResponse> response = reviewRepository.retrieveReviews(pageable);
 
         return new SingleResponse<>(response);
     }
@@ -61,7 +66,7 @@ public class DefaultReviewService implements ReviewService {
 
     @Override
     public SingleResponse<ReviewResponse> retrieveReviewDetails(final Long id) {
-        ReviewResponse response = this.reviewRepository.queryById(id);
+        ReviewResponse response = reviewRepository.queryById(id);
 
         return new SingleResponse<>(response);
     }
@@ -69,19 +74,19 @@ public class DefaultReviewService implements ReviewService {
     @Transactional
     @Override
     public void updateReview(final ReviewUpdateRequest reviewRequest, final Long id) {
-        Review review = this.reviewRepository.findById(id).orElseThrow(ReviewNotFoundException::new);
-        Asset asset = this.assetRepository.findById(reviewRequest.getAssetId())
+        Review review = reviewRepository.findById(id).orElseThrow(ReviewNotFoundException::new);
+        Asset asset = assetRepository.findById(reviewRequest.getAssetId())
                                           .orElseThrow(AssetNotFoundException::new);
 
         review.updateReview(reviewRequest, asset);
 
-        this.reviewRepository.save(review);
+        reviewRepository.save(review);
 
     }
 
     @Override
     public void deleteReview(final Long id) {
-        this.reviewRepository.delete(reviewRepository.findById(id).orElseThrow(ReviewNotFoundException::new));
+        reviewRepository.delete(reviewRepository.findById(id).orElseThrow(ReviewNotFoundException::new));
     }
 
 }

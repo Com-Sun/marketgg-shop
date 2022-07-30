@@ -62,7 +62,7 @@ public class ReviewController {
             throw new IllegalArgumentException(bindingResult.getAllErrors().get(0).getDefaultMessage());
         }
 
-        this.reviewService.createReview(reviewRequest, images, uuid);
+        reviewService.createReview(reviewRequest, images, uuid);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                              .location(URI.create(DEFAULT_REVIEW_URI + productId + "/review/" + uuid))
@@ -80,7 +80,7 @@ public class ReviewController {
     public ResponseEntity<CommonResponse> retrieveReviews(@PathVariable final Long productId,
                                                           final DefaultPageRequest pageRequest) {
 
-        SingleResponse<?> response = this.reviewService.retrieveReviews(pageRequest.getPageable());
+        SingleResponse<?> response = reviewService.retrieveReviews(pageRequest.getPageable());
 
         return ResponseEntity.status(HttpStatus.OK)
                              .location(URI.create(DEFAULT_REVIEW_URI + productId + "/review"))
@@ -98,7 +98,7 @@ public class ReviewController {
     public ResponseEntity<CommonResponse> retrieveReviewDetails(@PathVariable final Long productId,
                                                                 @PathVariable final Long reviewId) {
 
-        SingleResponse<?> response = this.reviewService.retrieveReviewDetails(reviewId);
+        SingleResponse<?> response = reviewService.retrieveReviewDetails(reviewId);
 
         return ResponseEntity.status(HttpStatus.OK)
                              .location(URI.create(DEFAULT_REVIEW_URI + productId + "/review/" + reviewId))
@@ -124,7 +124,7 @@ public class ReviewController {
             throw new IllegalArgumentException(bindingResult.getAllErrors().get(0).getDefaultMessage());
         }
 
-        this.reviewService.updateReview(reviewRequest, reviewId);
+        reviewService.updateReview(reviewRequest, reviewId);
 
         return ResponseEntity.status(HttpStatus.OK)
                              .location(URI.create(DEFAULT_REVIEW_URI + productId + "/review/" + reviewId))
@@ -141,7 +141,7 @@ public class ReviewController {
     @DeleteMapping("/{productId}/review/{reviewId}")
     public ResponseEntity<Void> deleteReview(@PathVariable final Long productId,
                                              @PathVariable final Long reviewId) {
-        this.reviewService.deleteReview(reviewId);
+        reviewService.deleteReview(reviewId);
 
         return ResponseEntity.status(HttpStatus.OK)
                              .location(URI.create(DEFAULT_REVIEW_URI + productId + "/review/" + reviewId))
