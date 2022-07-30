@@ -57,7 +57,7 @@ public class DefaultReviewService implements ReviewService {
     }
 
     @Override
-    public SingleResponse<Page> retrieveReviews(final Pageable pageable) {
+    public SingleResponse<Page<ReviewResponse>> retrieveReviews(final Pageable pageable) {
         Page<ReviewResponse> response = reviewRepository.retrieveReviews(pageable);
 
         return new SingleResponse<>(response);
@@ -87,6 +87,11 @@ public class DefaultReviewService implements ReviewService {
     @Override
     public void deleteReview(final Long id) {
         reviewRepository.delete(reviewRepository.findById(id).orElseThrow(ReviewNotFoundException::new));
+    }
+
+    @Override
+    public boolean approveReview(Long id) {
+        return false;
     }
 
 }

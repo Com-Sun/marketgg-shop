@@ -6,9 +6,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.BDDMockito.willDoNothing;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.marketgg.server.dto.request.MemberCreateRequest;
 import com.nhnacademy.marketgg.server.dto.request.ReviewCreateRequest;
@@ -33,7 +31,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -130,10 +127,10 @@ class DefaultReviewServiceTest {
     @DisplayName("후기 전체 조회 테스트")
     void testRetrieveReviews() {
         List<ReviewResponse> list = List.of(reviewResponse);
-        Page page = new PageImpl<>(list, PageRequest.of(0, 1), 1);
+        Page<ReviewResponse> page = new PageImpl<>(list, PageRequest.of(0, 1), 1);
         given(reviewRepository.retrieveReviews(PageRequest.of(0, 1))).willReturn(page);
 
-        SingleResponse<Page> reviewResponses = reviewService.retrieveReviews(page.getPageable());
+        SingleResponse<Page<ReviewResponse>> reviewResponses = reviewService.retrieveReviews(page.getPageable());
 
         assertThat(reviewResponses).isNotNull();
         then(reviewRepository).should().retrieveReviews(page.getPageable());

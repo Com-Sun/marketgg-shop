@@ -32,7 +32,7 @@ public interface ReviewService {
      * @param pageable - 사이즈는 10입니다.
      * @return - 페이지 정보가 담긴 공통 응답객체를 반환합니다.
      */
-    SingleResponse<Page> retrieveReviews(final Pageable pageable);
+    SingleResponse<Page<ReviewResponse>> retrieveReviews(final Pageable pageable);
 
     /**
      * 후기의 상세 정보를 조회합니다.
@@ -56,5 +56,12 @@ public interface ReviewService {
      * @param id - 삭제하려는 후기의 기본키입니다.
      */
     void deleteReview(final Long id);
+
+    /**
+     * 관리자가 후기를 승인합니다.
+     *
+     * @param id - 승인하려는 후기의 기본키입니다.
+     */
+    boolean approveReview(final Long id);
 
 }
