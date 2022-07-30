@@ -8,6 +8,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willDoNothing;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.marketgg.server.dto.request.MemberCreateRequest;
 import com.nhnacademy.marketgg.server.dto.request.ReviewCreateRequest;
 import com.nhnacademy.marketgg.server.dto.request.ReviewUpdateRequest;
@@ -17,10 +19,15 @@ import com.nhnacademy.marketgg.server.entity.Asset;
 import com.nhnacademy.marketgg.server.entity.Member;
 import com.nhnacademy.marketgg.server.entity.Review;
 import com.nhnacademy.marketgg.server.repository.asset.AssetRepository;
+import com.nhnacademy.marketgg.server.repository.image.ImageRepository;
 import com.nhnacademy.marketgg.server.repository.member.MemberRepository;
 import com.nhnacademy.marketgg.server.repository.review.ReviewRepository;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,11 +37,14 @@ import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
 @Transactional
@@ -52,6 +62,12 @@ class DefaultReviewServiceTest {
     @Mock
     AssetRepository assetRepository;
 
+    @Mock
+    ImageRepository imageRepository;
+
+    @Autowired
+    ObjectMapper objectMapper;
+
     private Member member;
     private Review review;
     private Asset asset;
@@ -67,7 +83,6 @@ class DefaultReviewServiceTest {
         asset = Asset.create();
 
         reviewRequest = new ReviewCreateRequest();
-        ReflectionTestUtils.setField(reviewRequest, "assetId", 1L);
         ReflectionTestUtils.setField(reviewRequest, "content", "리뷰내용");
         ReflectionTestUtils.setField(reviewRequest, "rating", 5L);
         review = new Review(reviewRequest, member, asset);
@@ -90,17 +105,26 @@ class DefaultReviewServiceTest {
 
     }
 
-    // @Test
-    // @DisplayName("일반 리뷰 생성 성공 테스트")
-    // void testCreateReview() {
-    //     given(memberRepository.findByUuid(anyString())).willReturn(Optional.ofNullable(member));
-    //     given(assetRepository.findById(anyLong())).willReturn(Optional.ofNullable(asset));
-    //     given(reviewRepository.save(any(Review.class))).willReturn(review);
-    //
-    //     this.reviewService.createReview(reviewRequest, "admin");
-    //
-    //     then(reviewRepository).should().save(any(Review.class));
-    // }
+    @Test
+    @DisplayName("일반 리뷰 생성 성공 테스트")
+    void testCreateReview() throws IOException {
+
+        URL url = getClass().getClassLoader().getResource("lee.png");
+        String filePath = Objects.requireNonNull(url).getPath();
+
+        MockMultipartFile file =
+            new MockMultipartFile("images", "lee.png", "image/png", new FileInputStream(filePath));
+
+        List<MultipartFile> images = List.of(file, file);
+
+        given(memberRepository.findByUuid(anyString())).willReturn(Optional.ofNullable(member));
+        given(reviewRepository.save(any(Review.class))).willReturn(review);
+        given(imageRepository.saveAll(any(List.class))).willReturn(images);
+
+        this.reviewService.createReview(reviewRequest, images,"admin");
+
+        then(reviewRepository).should().save(any(Review.class));
+    }
 
     @Test
     @DisplayName("후기 전체 조회 테스트")
