@@ -1,9 +1,8 @@
 package com.nhnacademy.marketgg.server.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
+import com.nhnacademy.marketgg.server.dto.request.ReviewCreateRequest;
+import com.nhnacademy.marketgg.server.dto.request.ReviewUpdateRequest;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,7 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Table(name = "reviews")
 @Entity
@@ -37,7 +38,7 @@ public class Review {
     private String content;
 
     @Column
-    private Integer rating;
+    private Long rating;
 
     @Column(name = "is_best")
     private Boolean isBest;
@@ -50,5 +51,21 @@ public class Review {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    public Review(ReviewCreateRequest reviewRequest, Member member, Asset asset) {
+        this.member = member;
+        this.asset = asset;
+        this.content = reviewRequest.getContent();
+        this.rating = reviewRequest.getRating();
+        this.isBest = false;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void updateReview(ReviewUpdateRequest reviewRequest, Asset asset) {
+        this.content = reviewRequest.getContent();
+        this.rating = reviewRequest.getRating();
+        this.asset = asset;
+    }
 
 }

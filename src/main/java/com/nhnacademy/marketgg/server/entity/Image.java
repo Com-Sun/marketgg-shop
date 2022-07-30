@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 사진 엔티티입니다.
@@ -42,6 +43,10 @@ public class Image {
     public Image(Asset asset, String imageAddress) {
         this.asset = asset;
         this.imageAddress = imageAddress;
+    }
+
+    public void setImageSequence(Integer sequence) {
+        this.imageSequence = sequence;
     }
 
 }
